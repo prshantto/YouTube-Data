@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! Server is running...");
 });
 
-app.get("/ai-response", async (req, res) => {
+app.post("/ai-response", async (req, res) => {
   const prompt = req.body.prompt;
   const aiResponse = await axios.post(
     `${process.env.GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`,
@@ -35,7 +35,7 @@ app.get("/ai-response", async (req, res) => {
 });
 
 app.get("/get-yt-video", async (req, res) => {
-  const url = req.body.url;
+  const url = req.query.url;
   function extractVideoId(url) {
     const pattern =
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
