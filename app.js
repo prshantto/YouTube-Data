@@ -7,7 +7,11 @@ const { getJson } = require("serpapi");
 
 app.use(cors());
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
+  res.send("Hello World! Server is running...");
+});
+
+app.get("/get-yt-video", async (req, res) => {
   const url = req.query.url;
   function extractVideoId(url) {
     const pattern =
