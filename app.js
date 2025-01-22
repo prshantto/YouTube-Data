@@ -16,34 +16,18 @@ app.get("/", (req, res) => {
   res.send("Hello World! Server is running...");
 });
 
-app.post("/ai-response", async (req, res) => {
-  const prompt = req.body.prompt;
-  const aiResponse = await axios.post(
-    `${process.env.GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`,
-    {
-      contents: [
-        {
-          parts: [
-            {
-              text: prompt,
-            },
-          ],
-        },
-      ],
-    }
-  );
-
-  res.end(JSON.stringify(aiResponse.data));
-});
-
-app.get("/get-yt-video", async (req, res) => {
-  const url = req.query.url;
+app.post("/getvideo", async (req, res) => {
+  const url = req.body.url;
   function extractVideoId(url) {
     const pattern =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(pattern);
+    console.log("URL: ", url); // Log the URL
+    console.log("Match: ", match); // Log the match result
     return match ? match[1] : null;
   }
+
+  console.log(extractVideoId(url));
 
   const response = await getJson({
     engine: "youtube_video",
@@ -89,6 +73,26 @@ app.post("/gettranscript", (req, res) => {
       res.status(200).json({ transcript });
     }
   );
+});
+
+app.post("/airesponse", async (req, res) => {
+  const prompt = req.body.prompt;
+  const aiResponse = await axios.post(
+    `${process.env.GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`,
+    {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt,
+            },
+          ],
+        },
+      ],
+    }
+  );
+
+  res.end(JSON.stringify(aiResponse.data));
 });
 
 module.exports = app;
