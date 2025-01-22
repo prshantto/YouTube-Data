@@ -6,6 +6,7 @@ dotenv.config();
 const { getJson } = require("serpapi");
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const { exec } = require("child_process");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -58,6 +59,34 @@ app.get("/get-yt-video", async (req, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify(videoData));
+});
+
+app.post("/gettranscript", (req, res) => {
+  const url = req.body.url;
+  function extractVideoId(url) {
+    const pattern =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(pattern);
+    return match ? match[1] : null;
+  }
+
+  exec(
+    `python transcript.py ${extractVideoId(url)}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return res.status(500).json({ error: "Error executing Python script" });
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return res.status(500).json({ error: "Python script error" });
+      }
+
+      const transcript = stdout.trim();
+      console.log(transcript);
+      res.status(200).json({ transcript });
+    }
+  );
 });
 
 module.exports = app;
