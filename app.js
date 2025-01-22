@@ -7,6 +7,7 @@ const { getJson } = require("serpapi");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const { exec } = require("child_process");
+const path = require("path");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -70,8 +71,9 @@ app.post("/gettranscript", (req, res) => {
     return match ? match[1] : null;
   }
 
+  const transcriptScript = path.join(__dirname, "transcript.py");
   exec(
-    `python transcript.py ${extractVideoId(url)}`,
+    `python ${transcriptScript} ${extractVideoId(url)}`,
     (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
