@@ -83,7 +83,6 @@ app.post("/gettranscript", (req, res) => {
       }
 
       const transcript = stdout.trim();
-      console.log(transcript);
       res.status(200).json({ transcript });
     }
   );
