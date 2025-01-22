@@ -81,7 +81,7 @@ app.post("/gettranscript", (req, res) => {
       }
       if (stderr) {
         console.error(`stderr: ${stderr}`);
-        return res.status(500).json({ error: "Python script error" });
+        return res.status(500).json({ error: "Python script error", stderr });
       }
 
       const transcript = stdout.trim();
