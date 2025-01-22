@@ -4,6 +4,10 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
