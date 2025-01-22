@@ -22,12 +22,8 @@ app.post("/getvideo", async (req, res) => {
     const pattern =
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(pattern);
-    console.log("URL: ", url); // Log the URL
-    console.log("Match: ", match); // Log the match result
     return match ? match[1] : null;
   }
-
-  console.log(extractVideoId(url));
 
   const response = await getJson({
     engine: "youtube_video",
@@ -50,7 +46,7 @@ app.post("/gettranscript", (req, res) => {
   const url = req.body.url;
   function extractVideoId(url) {
     const pattern =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|\S*?[?&]v=|embed\/|v\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(pattern);
     return match ? match[1] : null;
   }
@@ -69,7 +65,6 @@ app.post("/gettranscript", (req, res) => {
       }
 
       const transcript = stdout.trim();
-      console.log(transcript);
       res.status(200).json({ transcript });
     }
   );
