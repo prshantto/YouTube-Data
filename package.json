@@ -5,8 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "postinstall": "bash install_python.sh"
+    "dev": "nodemon server.js"
   },
   "author": "prashant",
   "license": "ISC",

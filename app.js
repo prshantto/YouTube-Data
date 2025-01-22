@@ -53,7 +53,7 @@ app.post("/gettranscript", (req, res) => {
 
   const transcriptScript = path.join(__dirname, "transcript.py");
   exec(
-    `python ${transcriptScript} ${extractVideoId(url)}`,
+    `python3 ${transcriptScript} ${extractVideoId(url)}`,
     (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
