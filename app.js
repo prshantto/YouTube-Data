@@ -6,8 +6,6 @@ dotenv.config();
 const { getJson } = require("serpapi");
 const bodyParser = require("body-parser");
 const axios = require("axios");
-const { exec } = require("child_process");
-const path = require("path");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -51,23 +49,18 @@ app.post("/gettranscript", (req, res) => {
     return match ? match[1] : null;
   }
 
-  const transcriptScript = path.join(__dirname, "transcript.py");
-  exec(
-    `python3 ${transcriptScript} ${extractVideoId(url)}`,
-    (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return res.status(500).json({ error: "Error executing Python script" });
-      }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return res.status(500).json({ error: "Python script error" });
-      }
-
-      const transcript = stdout.trim();
-      res.status(200).json({ transcript });
-    }
-  );
+  axios
+    .get(`http://127.0.0.1:8000/transcript?video_id=${extractVideoId(url)}`)
+    .then((response) => {
+      const transcript = response.data;
+      res.statusCode = 200;
+      res.end(JSON.stringify(transcript));
+    })
+    .catch((error) => {
+      console.error(error);
+      res.statusCode = 500;
+      res.end(JSON.stringify(error));
+    });
 });
 
 app.post("/airesponse", async (req, res) => {
