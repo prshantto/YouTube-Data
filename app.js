@@ -48,12 +48,16 @@ app.post("/gettranscript", (req, res) => {
     const match = url.match(pattern);
     return match ? match[1] : null;
   }
-
   axios
-    .get(`http://127.0.0.1:8000/transcript?video_id=${extractVideoId(url)}`)
+    .get(`${process.env.SUPADAT_API_URL}?url=${url}`, {
+      headers: {
+        "x-api-key": process.env.SUPADAT_API_KEY,
+      },
+    })
     .then((response) => {
-      const transcript = response.data;
+      const transcriptData = response.data.content;
       res.statusCode = 200;
+      const transcript = transcriptData.map((item) => item.text).join(" ");
       res.end(JSON.stringify(transcript));
     })
     .catch((error) => {
